@@ -9,6 +9,7 @@
 #include "types/types.h"
 
 #ifdef __cplusplus
+namespace dxt_common {
 extern "C" {
 #endif
 
@@ -68,6 +69,7 @@ int unpack_BYTES(const BYTE buf[], int buf_len, BYTE msg[]); // string
 
 
 #ifdef __cplusplus
+}
 }
 #endif
 
