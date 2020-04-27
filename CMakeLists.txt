@@ -6,7 +6,7 @@ enable_testing()
 
 include_directories(${PROJECT_SOURCE_DIR})
 
-add_library(dxt_common
+add_library(dxt_common STATIC
     marshalling/packer.c)
 target_include_directories(dxt_common PUBLIC ${PROJECT_SOURCE_DIR})
 

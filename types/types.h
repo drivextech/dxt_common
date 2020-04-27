@@ -3,11 +3,16 @@
 // Licensed under the License.
 
 #pragma once
-#ifndef _UTIL__TYPES_H_
-#define _UTIL__TYPES_H_
+#ifndef _TYPES_H_
+#define _TYPES_H_
 
 #include <stdint.h>
 #include <stddef.h>
+
+
+#ifdef __cplusplus
+namespace dxt_common {
+#endif
 
 
 typedef int8_t INT8;
@@ -118,5 +123,9 @@ if(! IS_PCBER_NULL(pcber)) { \
 #define RUN_CBER0_IF_NOT_NULL(pcber) RUN_PCBER0(pcber)
 #define RUN_CBER1_IF_NOT_NULL(pcber, cber_data) RUN_PCBER1(pcber, cber_data)
 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
