@@ -22,6 +22,8 @@ template<class T, int Dim>
 class VectorBase
 {
 public:
+    constexpr static int Dim = Dim;
+public:
     inline void set_constant(T val) {
         for(auto i = 0U; i < Dim; i++) {
             data[i] = val;
