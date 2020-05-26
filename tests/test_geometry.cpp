@@ -4,11 +4,12 @@
 
 using namespace std;
 using namespace dxt_common::geometry;
+using dxt_common::geometry::operator-;
 
 
-int main()
+
+bool test_geometry_types_definition()
 {
-
     Vector2f v2f;
     Vector3f v3f;
     Vector2d v2d;
@@ -41,6 +42,26 @@ int main()
     cout << "p2d.norm: " << p2d.norm() << endl;
     cout << "p3d.norm: " << p3d.norm() << endl;
 
+    return true;
+}
+
+
+bool test_geometry_operations()
+{
+    Position3d p1(-8.0, 0.0, 0.0), p2(8.0, 0.0, 0.0);
+
+    cout << "dist p1 <-> p2: " << (p1 - p2).length() <<endl;
+
+    return true;
+}
+
+
+int main()
+{
+
+    test_geometry_types_definition();
+
+    test_geometry_operations();
 
     return 0;
 }

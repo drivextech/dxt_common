@@ -9,6 +9,7 @@
 #include <math.h>
 #include <stdint.h>
 #include <stddef.h>
+#include <assert.h>
 
 
 
@@ -18,11 +19,11 @@ namespace dxt_common
 namespace geometry
 {
 
-template<class T, int Dim>
+template<class T, int D>
 class VectorBase
 {
 public:
-    constexpr static int Dim = Dim;
+    constexpr static int Dim = D;
 public:
     inline void set_constant(T val) {
         for(auto i = 0U; i < Dim; i++) {
@@ -37,7 +38,7 @@ public:
     inline T operator()(int index) const {
         assert(index >= 0);
 #ifndef NDEBUG
-        assert(index >= 0 && index < Dim)
+        assert(index >= 0 && index < Dim);
 #endif
         return data[index];
     }
@@ -45,7 +46,7 @@ public:
     inline T& operator()(int index) {
         assert(index >= 0);
 #ifndef NDEBUG
-        assert(index >= 0 && index < Dim)
+        assert(index >= 0 && index < Dim);
 #endif
         return data[index];
     }
@@ -119,23 +120,68 @@ protected:
 
 
 
-template<class T, int Dim>
-class Vector: public VectorBase<T, Dim>
+template<class T, int D> class Vector;
+
+template<class T, int D>
+inline Vector<T, D> operator-(const Vector<T, D>& v) {
+    Vector<T, D> v_o(v);
+    return -v_o;
+}
+
+template<class T, int D>
+inline Vector<T, D> operator+(const Vector<T, D>& v1, const Vector<T, D>& v2) {
+    Vector<T, D> v_o(v1);
+    v_o += v2;
+    return v_o;
+}
+
+template<class T, int D>
+inline Vector<T, D> operator-(const Vector<T, D>& v1, const Vector<T, D>& v2) {
+    Vector<T, D> v_o(v1);
+    v_o -= v2;
+    return v_o;
+}
+
+template<class T, int D>
+inline Vector<T, D> operator*(const Vector<T, D>& v, T s) {
+    Vector<T, D> v_o(v);
+    v_o *= s;
+    return v_o;
+}
+
+template<class T, int D>
+inline Vector<T, D> operator*(T s, const Vector<T, D>& v) {
+    Vector<T, D> v_o(v);
+    v_o *= s;
+    return v_o;
+}
+
+template<class T, int D>
+inline Vector<T, D> operator/(const Vector<T, D>& v, T s) {
+    Vector<T, D> v_o(v);
+    v_o /= s;
+    return v_o;
+}
+
+
+
+template<class T, int D>
+class Vector: public VectorBase<T, D>
 {
 public:
     inline Vector() {
-        set_zero();
+        VectorBase<T,D>::set_zero();
     }
 
     inline Vector(const Vector& v) {
-        for(auto i = 0U; i < Dim; i++) {
-            data[i] = v.data[i];
+        for(auto i = 0U; i < Vector::Dim; i++) {
+            this->data[i] = v.data[i];
         }
     }
 
     inline Vector& operator=(const Vector& v) {
-        for(auto i = 0U; i < Dim; i++) {
-            data[i] = v.data[i];
+        for(auto i = 0U; i < Vector::Dim; i++) {
+            this->data[i] = v.data[i];
         }
 
         return *this;
@@ -148,12 +194,12 @@ public:
     }
 
 
-    // inline friend Vector operator-(const Vector& v);
-    // inline friend Vector operator+(const Vector& v1,const Vector& v2);
-    // inline friend Vector operator-(const Vector& v1,const Vector& v2);
-    // inline friend Vector operator*(const Vector& v, T s);
-    // inline friend Vector operator*(T s, const Vector& v);
-    // inline friend Vector operator/(const Vector& v, T s);
+    // friend Vector operator-(const Vector& v);
+    // friend Vector operator+(const Vector& v1, const Vector& v2);
+    // friend Vector operator-(const Vector& v1, const Vector& v2);
+    // friend Vector operator*(const Vector& v, T s);
+    // friend Vector operator*(T s, const Vector& v);
+    // friend Vector operator/(const Vector& v, T s);
 };
 
 
@@ -162,23 +208,23 @@ class Vector<T, 2>: public VectorBase<T, 2>
 {
 public:
     inline Vector() {
-        set_zero();
+        VectorBase<T,2>::set_zero();
     }
 
     inline Vector(T x, T y) {
-        data[0] = x;
-        data[1] = y;
+        this->data[0] = x;
+        this->data[1] = y;
     }
 
     inline Vector(const Vector& v) {
-        for(auto i = 0U; i < Dim; i++) {
-            data[i] = v.data[i];
+        for(auto i = 0U; i < Vector::Dim; i++) {
+            this->data[i] = v.data[i];
         }
     }
 
     inline Vector& operator=(const Vector& v) {
-        for(auto i = 0U; i < Dim; i++) {
-            data[i] = v.data[i];
+        for(auto i = 0U; i < Vector::Dim; i++) {
+            this->data[i] = v.data[i];
         }
 
         return *this;
@@ -191,17 +237,24 @@ public:
     }
 
     inline T x() const {
-        return data[0];
+        return this->data[0];
     }
     inline T y() const {
-        return data[1];
+        return this->data[1];
     }
     inline T& x() {
-        return data[0];
+        return this->data[0];
     }
     inline T& y() {
-        return data[1];
+        return this->data[1];
     }
+
+    // friend Vector operator-(const Vector& v);
+    // friend Vector operator+(const Vector& v1, const Vector& v2);
+    // friend Vector operator-(const Vector& v1, const Vector& v2);
+    // friend Vector operator*(const Vector& v, T s);
+    // friend Vector operator*(T s, const Vector& v);
+    // friend Vector operator/(const Vector& v, T s);
 };
 
 template<class T>
@@ -209,24 +262,24 @@ class Vector<T, 3>: public VectorBase<T, 3>
 {
 public:
     inline Vector() {
-        set_zero();
+        VectorBase<T,3>::set_zero();
     }
 
     inline Vector(T x, T y, T z) {
-        data[0] = x;
-        data[1] = y;
-        data[2] = z;
+        this->data[0] = x;
+        this->data[1] = y;
+        this->data[2] = z;
     }
 
     inline Vector(const Vector& v) {
-        for(auto i = 0U; i < Dim; i++) {
-            data[i] = v.data[i];
+        for(auto i = 0U; i < Vector::Dim; i++) {
+            this->data[i] = v.data[i];
         }
     }
 
     inline Vector& operator=(const Vector& v) {
-        for(auto i = 0U; i < Dim; i++) {
-            data[i] = v.data[i];
+        for(auto i = 0U; i < Vector::Dim; i++) {
+            this->data[i] = v.data[i];
         }
 
         return *this;
@@ -239,34 +292,41 @@ public:
     }
 
     inline T x() const {
-        return data[0];
+        return this->data[0];
     }
     inline T y() const {
-        return data[1];
+        return this->data[1];
     }
     inline T z() const {
-        return data[2];
+        return this->data[2];
     }
     inline T& x() {
-        return data[0];
+        return this->data[0];
     }
     inline T& y() {
-        return data[1];
+        return this->data[1];
     }
     inline T& z() {
-        return data[2];
+        return this->data[2];
     }
+
+    // friend Vector operator-(const Vector& v);
+    // friend Vector operator+(const Vector& v1, const Vector& v2);
+    // friend Vector operator-(const Vector& v1, const Vector& v2);
+    // friend Vector operator*(const Vector& v, T s);
+    // friend Vector operator*(T s, const Vector& v);
+    // friend Vector operator/(const Vector& v, T s);
 };
 
 
 
 // Alias for Point, Position
 
-template<class T, int Dim>
-using Point = Vector<T, Dim>;
+template<class T, int D>
+using Point = Vector<T, D>;
 
-template<class T, int Dim>
-using Position = Vector<T, Dim>;
+template<class T, int D>
+using Position = Vector<T, D>;
 
 
 
